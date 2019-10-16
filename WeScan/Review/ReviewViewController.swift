@@ -43,6 +43,8 @@ final class ReviewViewController: UIViewController {
     private lazy var doneButton: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(finishScan))
         button.tintColor = navigationController?.navigationBar.tintColor
+        button.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "Montserrat-Semibold", size: 16)!], for: .normal)
+        
         return button
     }()
     

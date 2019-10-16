@@ -34,6 +34,8 @@ final class EditScanViewController: UIViewController {
         let title = NSLocalizedString("wescan.edit.button.next", tableName: nil, bundle: Bundle(for: EditScanViewController.self), value: "Next", comment: "A generic next button")
         let button = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(pushReviewController))
         button.tintColor = navigationController?.navigationBar.tintColor
+        button.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "Montserrat-Semibold", size: 15)!], for: .normal)
+        
         return button
     }()
 
