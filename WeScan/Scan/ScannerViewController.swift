@@ -38,10 +38,14 @@ final class ScannerViewController: UIViewController {
     }()
     
     lazy private var cancelButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Cancel", comment: "The cancel button"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.init(name: "Montserrat-Semibold", size: 16)
+        button.tintColor = .white
         button.addTarget(self, action: #selector(cancelImageScannerController), for: .touchUpInside)
+                
+        
         return button
     }()
     
@@ -91,6 +95,8 @@ final class ScannerViewController: UIViewController {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
         
+        self.navigationController?.navigationBar.isTranslucent = false
+        
         CaptureSession.current.isEditing = false
         quadView.removeQuadrilateral()
         captureSessionManager?.start()
@@ -98,8 +104,8 @@ final class ScannerViewController: UIViewController {
 
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.addSubview(visualEffectView)
-        navigationController?.navigationBar.sendSubviewToBack(visualEffectView)
+//        navigationController?.navigationBar.addSubview(visualEffectView)
+//        navigationController?.navigationBar.sendSubviewToBack(visualEffectView)
         
         navigationController?.navigationBar.barStyle = .blackTranslucent
     }
@@ -109,17 +115,17 @@ final class ScannerViewController: UIViewController {
         
         videoPreviewLayer.frame = view.layer.bounds
         
-        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
-        let visualEffectRect = self.navigationController?.navigationBar.bounds.insetBy(dx: 0, dy: -(statusBarHeight)).offsetBy(dx: 0, dy: -statusBarHeight)
-        
-        visualEffectView.frame = visualEffectRect ?? CGRect.zero
+//        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+//        let visualEffectRect = self.navigationController?.navigationBar.bounds.insetBy(dx: 0, dy: -(statusBarHeight)).offsetBy(dx: 0, dy: -statusBarHeight)
+//
+//        visualEffectView.frame = visualEffectRect ?? CGRect.zero
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         UIApplication.shared.isIdleTimerDisabled = false
         
-        visualEffectView.removeFromSuperview()
+//        visualEffectView.removeFromSuperview()
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barStyle = originalBarStyle ?? .default
         captureSessionManager?.stop()
@@ -144,6 +150,18 @@ final class ScannerViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.setLeftBarButton(flashButton, animated: false)
         navigationItem.setRightBarButton(autoScanButton, animated: false)
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = #colorLiteral(red: 0, green: 0.6487084314, blue: 1, alpha: 1)
+            appearance.titleTextAttributes = [NSAttributedString.Key.font: UIFont.init(name: "Montserrat-Semibold", size: 16)!, .foregroundColor: UIColor.white]
+            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+            
+            UINavigationBar.appearance().tintColor = .white
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().compactAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
         
         if UIImagePickerController.isFlashAvailable(for: .rear) == false {
             let flashOffImage = UIImage(named: "flashUnavailable", in: Bundle(for: ScannerViewController.self), compatibleWith: nil)
